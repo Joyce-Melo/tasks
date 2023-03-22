@@ -1,4 +1,4 @@
-const Database = require("./config.cjs");
+import {Database} from ("./config.js");
 
 const initDb = {
     async init(){
