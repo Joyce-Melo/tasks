@@ -1,4 +1,4 @@
-import {Database} from ("./config.js");
+import Database from "./config.js";
 
 const initDb = {
     async init(){
@@ -8,7 +8,7 @@ const initDb = {
             id INTEGER PRIMARY KEY,
             title TEXT,
             description TEXT,
-            completed_at NULL,
+            completed_at DATETIME DEFAULT NULL,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )`);

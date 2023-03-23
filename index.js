@@ -7,6 +7,7 @@ const port = 4004;
 app.use(express.json())
 
 app.use('/tasks', tasksRouter)
+app.use('/tasks', tasksRouter)
 
 
 
