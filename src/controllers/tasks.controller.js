@@ -117,7 +117,7 @@ export const setTaskCompleted = async (req, res) => {
           );
             res.status(200).send({message: "Task Completed"})
         } else {
-          res.status(400).send({message: "Not able to complete task"})
+          res.status(400).send({message: "Not able to mark task as completed"})
         }
 
     }catch (error) {
