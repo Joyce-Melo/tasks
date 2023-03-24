@@ -47,22 +47,40 @@ export const updateTask = async (req, res) => {
     } else {
       // const taskToUpdate = await db.get(`SELECT * FROM tasks WHERE`)
       //const taskToUpdate = await db.run(
-        //`UPDATE tasks SET title = "${title}", description = "${description}" WHERE id = ${id}`
+      //`UPDATE tasks SET title = "${title}", description = "${description}" WHERE id = ${id}`
       //);
       //res.status(200).send({ taskToUpdate });
-        if (!title){
-            const descriptionUpdate = await db.run (`UPDATE tasks SET description = "${description}" WHERE id = ${id}`)
-            res.status(200).send({ descriptionUpdate });
-        } if (!description){
-            const titleUpdate = await db.run(`UPDATE tasks SET title = "${title}" WHERE id = ${id}`)
-            res.status(200).send({ titleUpdate });
-        } else{
-            const taskToUpdate = await db.run(
-                `UPDATE tasks SET title = "${title}", description = "${description}" WHERE id = ${id}`);
-                res.status(200).send({ taskToUpdate });     
-        }
-
-
+      if (!title) {
+        const descriptionUpdate = await db.run(
+          `UPDATE tasks SET description = "${description}" WHERE id = ${id}`,
+        );
+        const updatedWhen = await db.run(
+          `UPDATE tasks SET updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
+        );
+       
+        res.status(200).send({ descriptionUpdate });
+      }
+      if (!description) {
+        const titleUpdate = await db.run(
+          `UPDATE tasks SET title = "${title}" WHERE id = ${id}`,
+          
+        );
+        const updatedWhen = await db.run(
+          `UPDATE tasks SET updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
+        );
+        
+        res.status(200).send({ titleUpdate });
+      } else {
+        const taskToUpdate = await db.run(
+          `UPDATE tasks SET title = "${title}", description = "${description}" WHERE id = ${id}`
+        )
+          const updatedWhen = await db.run(
+            `UPDATE tasks SET updated_at = CURRENT_TIMESTAMP WHERE id = ${id}`
+          );
+        
+        
+        res.status(200).send({ taskToUpdate });
+      }
     }
 
     console.log("Task Updated");
@@ -70,3 +88,39 @@ export const updateTask = async (req, res) => {
     res.status(500).send({ message: error.message });
   }
 };
+
+export const deleteTasks = async (req, res) => {
+ try {
+    const { id } = req.params;
+
+    const db = await Database()
+
+    const taskToDelete = await db.run(`DELETE FROM tasks WHERE id = ${id} `)
+
+    res.status(200).send ({message: "Task Deleted"})
+
+ } catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+}
+
+export const setTaskCompleted = async (req, res) => {
+    try{
+        const {id} = req.params;
+        const { complete } = req.body;
+
+        const db = await Database()
+
+        if (complete == "true"){
+          const completedWhen = await db.run(
+            `UPDATE tasks SET completed_at = CURRENT_TIMESTAMP WHERE id = ${id}`
+          );
+            res.status(200).send({message: "Task Completed"})
+        } else {
+          res.status(400).send({message: "Not able to complete task"})
+        }
+
+    }catch (error) {
+    res.status(500).send({ message: error.message });
+  }
+}
